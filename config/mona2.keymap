@@ -9,6 +9,7 @@
 #define ZMK_POINTING_DEFAULT_SCRL_VAL 100
 #define MOUSE 5
 #define SCROLL 6
+#define JP_L 7
 
 &mt {
     flavor = "balanced";
@@ -41,6 +42,32 @@
             #binding-cells = <1>;
             bindings = <&to 0 &macro_param_1to1 &kp MACRO_PLACEHOLDER>;
             label = "TO_LAYER_0";
+        };
+
+        // mo 2 を押しながら LCLK 位置をタップ: IME かな + JP_L を有効にし、layer_2 を外して
+        // 通常の文字配列に戻す (mo 2 を離すまで継続)
+        jp_on: jp_on {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            wait-ms = <5>;
+            tap-ms = <20>;
+            bindings =
+                <&macro_press &mo JP_L>,
+                <&macro_release &mo 2>,
+                <&macro_tap &kp LANG1>;
+        };
+
+        // &mo 2 の代わり。離した時に JP_L を解除して英数を送る
+        mo2_en: mo2_en {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            wait-ms = <0>;
+            tap-ms = <20>;
+            bindings =
+                <&macro_press &mo 2>,
+                <&macro_pause_for_release>,
+                <&macro_release &mo JP_L &mo 2>,
+                <&macro_tap &kp LANG2>;
         };
     };
 
@@ -79,7 +106,7 @@
 &kp Q           &kp W         &kp E             &kp R             &kp T                              &kp Y  &kp U  &kp I      &kp O    &kp P
 &kp A           &kp S         &kp D             &kp F             &kp G                   &none      &kp H  &kp J  &kp K      &kp L    &kp ENTER
 &kp Z           &kp X         &kp C             &kp V             &kp B      &mkp MCLK    &mkp RCLK  &kp N  &kp M  &kp COMMA  &kp DOT  &mo 3
-&kp LEFT_SHIFT  &kp LEFT_ALT  &kp LEFT_CONTROL  &kp LEFT_COMMAND  &kp SPACE  &mkp LCLK    &mo 1      &mo 2                             &kp RIGHT_SHIFT
+&kp LEFT_SHIFT  &kp LEFT_ALT  &kp LEFT_CONTROL  &kp LEFT_COMMAND  &kp SPACE  &mkp LCLK    &mo 1      &mo2_en                            &kp RIGHT_SHIFT
             >;
 
             sensor-bindings = <&scroll_up_down>;
@@ -101,7 +128,7 @@
 &kp EXCL        &kp AT     &kp POUND          &kp DOLLAR     &kp PERCENT                    &kp CARET      &kp AMPERSAND  &kp ASTRK         &kp LEFT_PARENTHESIS  &kp RIGHT_PARENTHESIS
 &kp MINUS       &kp EQUAL  &kp SQT            &kp SEMICOLON  &kp GRAVE              &trans  &kp PIPE       &kp LESS_THAN  &kp GREATER_THAN  &kp LEFT_BRACKET      &kp RIGHT_BRACKET
 &kp UNDERSCORE  &kp PLUS   &kp DOUBLE_QUOTES  &kp COLON      &kp TILDE    &none     &trans  &kp BACKSLASH  &kp SLASH      &kp QUESTION      &kp LEFT_BRACE        &kp RIGHT_BRACE
-&trans          &trans     &trans             &trans         &trans       &trans    &trans  &trans                                                                &trans
+&trans          &trans     &trans             &trans         &trans       &jp_on    &trans  &trans                                                                &trans
             >;
 
             sensor-bindings = <&inc_dec_kp C_BRIGHTNESS_DEC C_BRIGHTNESS_INC>;
@@ -140,6 +167,16 @@
 &trans  &trans  &trans  &trans  &trans            &trans  &trans  &trans  &trans  &trans  &trans
 &trans  &trans  &trans  &trans  &trans  &trans    &trans  &trans  &trans  &trans  &trans  &trans
 &trans  &trans  &trans  &trans  &trans  &trans    &trans  &trans                          &trans
+            >;
+        };
+
+        // 日本語モード中だけ有効。RIGHT_SHIFT を layer_2 の呼び出しに差し替える
+        jp_layer {
+            bindings = <
+&trans  &trans  &trans  &trans  &trans                       &trans  &trans  &trans  &trans  &trans
+&trans  &trans  &trans  &trans  &trans               &trans  &trans  &trans  &trans  &trans  &trans
+&trans  &trans  &trans  &trans  &trans  &trans       &trans  &trans  &trans  &trans  &trans  &trans
+&trans  &trans  &trans  &trans  &trans  &none        &trans  &none                           &mo 2
             >;
         };
     };
