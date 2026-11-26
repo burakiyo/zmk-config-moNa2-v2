@@ -53,6 +53,12 @@
         spi-max-frequency = <2000000>;
         irq-gpios = <&gpio0 2 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>; //P0.02を指定(MOTION)
         cpi = <600>;
+        // 動きの読み取りを 4ms ごと (毎秒 250 回) にする。Mac の受け取りは 7.5ms ごと
+        // なので、8ms だと受け取りのたびに新しい動きが揃わず小さくカクつく。
+        // 読み取りが増えた分は modules/mona2_ble で 1 件にまとめて送るので詰まらない。
+        // force-awake: ZMK が操作中 (最後の入力から 30 秒) の間はセンサーを省電力に落とさない。
+        force-awake;
+        force-awake-4ms-mode;
         //swap-xy;
         //invert-x; //COROPIT版ではコメントアウトを外す
         //invert-y; //COROPIT版ではコメントアウトを外す
