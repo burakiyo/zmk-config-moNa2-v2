@@ -1,3 +1,5 @@
 build:
+  cmake: modules/ble_mouse_coalesce
+  kconfig: modules/ble_mouse_coalesce/Kconfig
   settings:
     board_root: .

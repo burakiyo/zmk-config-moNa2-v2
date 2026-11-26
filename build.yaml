@@ -21,6 +21,15 @@ include:
   - board: seeeduino_xiao_ble
     shield: mona2_r rgbled_adapter
     snippet: studio-rpc-usb-uart
+  # 実験用: 右手側を「マウス」として名乗らせる版。macOS が低遅延の接続
+  # (7.5ms 間隔) にしてくれるかを試す。Mac が選んだ接続間隔を上書きしない
+  # よう、キーボードからの接続間隔の要求も止める。書き込んだら Mac 側で
+  # 一度削除して、ペアリングし直すこと。
+  - board: seeeduino_xiao_ble
+    shield: mona2_r rgbled_adapter
+    snippet: studio-rpc-usb-uart
+    cmake-args: -DCONFIG_BT_DEVICE_APPEARANCE=962 -DCONFIG_BT_GAP_AUTO_UPDATE_CONN_PARAMS=n -DCONFIG_BT_PERIPHERAL_PREF_MIN_INT=6 -DCONFIG_BT_PERIPHERAL_PREF_MAX_INT=12
+    artifact-name: mona2_r_mouse_appearance-seeeduino_xiao_ble-zmk
   - board: seeeduino_xiao_ble
     shield: mona2_l rgbled_adapter
   - board: seeeduino_xiao_ble

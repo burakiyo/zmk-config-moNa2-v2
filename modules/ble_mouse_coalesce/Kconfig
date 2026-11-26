@@ -1,0 +1,27 @@
+config MONA2_BLE_MOUSE_COALESCE
+    bool "Coalesce BLE mouse reports instead of queueing them"
+    depends on ZMK_BLE && ZMK_POINTING
+    depends on !ZMK_SPLIT || ZMK_SPLIT_ROLE_CENTRAL
+    help
+      Replaces ZMK's BLE mouse sender. Keeps only a few mouse notifications
+      inside the Bluetooth stack and folds further motion into the newest
+      unsent report, so the cursor never replays stale motion when the host
+      polls the link slower than the sensor reports.
+
+if MONA2_BLE_MOUSE_COALESCE
+
+config MONA2_BLE_MOUSE_COALESCE_MAX_IN_FLIGHT
+    int "Mouse notifications handed to the Bluetooth stack at once"
+    default 2
+    range 1 8
+
+config MONA2_BLE_MOUSE_COALESCE_SLOTS
+    int "Unsent mouse reports kept apart (one per button change)"
+    default 8
+    range 2 32
+
+config MONA2_BLE_MOUSE_COALESCE_STALL_MS
+    int "Stop waiting for a lost send completion after this many ms"
+    default 500
+
+endif
