@@ -1,5 +1,5 @@
 build:
-  cmake: modules/ble_mouse_coalesce
-  kconfig: modules/ble_mouse_coalesce/Kconfig
+  cmake: modules/mona2_ble
+  kconfig: modules/mona2_ble/Kconfig
   settings:
     board_root: .

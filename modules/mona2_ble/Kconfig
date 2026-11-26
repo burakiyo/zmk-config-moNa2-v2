@@ -25,3 +25,11 @@ config MONA2_BLE_MOUSE_COALESCE_STALL_MS
     default 500
 
 endif
+
+config MONA2_BLE_ADV_APPEARANCE
+    bool "Advertise CONFIG_BT_DEVICE_APPEARANCE instead of ZMK's fixed keyboard appearance"
+    depends on ZMK_BLE
+    help
+      ZMK v0.3 hard-codes the keyboard appearance (0x03C1) in its
+      advertising data, so CONFIG_BT_DEVICE_APPEARANCE only changes the GAP
+      characteristic. This patches the advertised appearance to match it.
