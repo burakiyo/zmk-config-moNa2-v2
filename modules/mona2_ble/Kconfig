@@ -24,6 +24,25 @@ config MONA2_BLE_MOUSE_COALESCE_STALL_MS
     int "Stop waiting for a lost send completion after this many ms"
     default 500
 
+config MONA2_BLE_MOUSE_PACE
+    bool "Send one mouse report per connection event, just before it"
+    default y
+    help
+      Instead of sending motion as soon as there is room, send at most one
+      report per connection event, timed shortly before the event and
+      holding all motion since the previous one. The event timing is
+      learned from send completions. Button changes are still sent at once.
+
+config MONA2_BLE_MOUSE_PACE_LEAD_US
+    int "Send this many microseconds before the expected connection event"
+    default 3000
+    depends on MONA2_BLE_MOUSE_PACE
+
+config MONA2_BLE_MOUSE_PACE_IDLE_EVENTS
+    int "Stop pacing after this many connection events without motion"
+    default 16
+    depends on MONA2_BLE_MOUSE_PACE
+
 endif
 
 config MONA2_BLE_ADV_APPEARANCE
